@@ -20,13 +20,13 @@ def _check_if_file_exists(input_path):
         return True
 
 
-def _run_subprocess_command(command, abs_output_path):
+def _run_subprocess_command(tool_name, command, abs_output_path, verbose=True):
     """
     Runs a subprocess command and returns the output.
     """
     # Run the command using subprocess.run
     try:
-        subprocess.run(command, capture_output=True, text=True, timeout=300, check=True)
+        subprocess.run(command, capture_output=True, text=True, timeout=300, check=True, verbose=True)
         
         # Check if the output file was created
         if os.path.exists(abs_output_path):
@@ -42,7 +42,7 @@ def _run_subprocess_command(command, abs_output_path):
         raise e
 
 
-def protonate_structure_with_pdb2pqr(input_path, output_path, pH=7.4):
+def protonate_structure_with_pdb2pqr(input_path, output_path, pH=7.4, verbose=True):
     """
     Adds hydrogens to a protein structure at a specified pH using PDB2PQR.
     """
@@ -69,9 +69,9 @@ def protonate_structure_with_pdb2pqr(input_path, output_path, pH=7.4):
     print("Using absolute output path:", abs_output_path)
     print("Full command:", " ".join(command))
 
-    _run_subprocess_command(command, abs_output_path)
+    _run_subprocess_command(command, abs_output_path, verbose=True)
     
-def optimize_structure_with_molprobity(input_path, output_path):
+def optimize_structure_with_molprobity(input_path, output_path, verbose=True):
     """
     Optimizes the structure by adding hydrogens with Asn/Gln/His flips where needed using MolProbity's reduce tool.
     
@@ -166,7 +166,7 @@ def optimize_structure_with_molprobity(input_path, output_path):
             raise RuntimeError(f"All structure optimization methods failed: {str(e)}, then {str(obabel_error)}")
 
 
-def convert_file_with_openbabel(input_path, output_path):
+def convert_file_with_openbabel(input_path, output_path, verbose=True):
     """
     Converts a file to a PDB file using Open Babel.
     """
@@ -219,10 +219,10 @@ def convert_file_with_openbabel(input_path, output_path):
     
     print(f"Running command: {' '.join(command)}")
 
-    _run_subprocess_command(command, abs_output_path)
+    _run_subprocess_command(tool_name="OpenBabel", command=command, abs_output_path=abs_output_path, verbose=True)
 
 
-def convert_to_pdbqt_with_mgltools(input_path, output_path):
+def convert_to_pdbqt_with_mgltools(input_path, output_path, verbose=True):
     """
     Converts a protein structure file to PDBQT format using MGLTools.
     
@@ -255,10 +255,10 @@ def convert_to_pdbqt_with_mgltools(input_path, output_path):
     
     print(f"Running command: {' '.join(command)}")
     
-    _run_subprocess_command(command, abs_output_path)
+    _run_subprocess_command(tool_name="MGLTools", command=command, abs_output_path=abs_output_path, verbose=True)
 
 
-def convert_receptor_to_pdbqt_with_openbabel(input_path, output_path):
+def convert_receptor_to_pdbqt_with_openbabel(input_path, output_path, verbose=True):
     """
     Converts a protein structure file to PDBQT format using OpenBabel.
     
@@ -283,10 +283,10 @@ def convert_receptor_to_pdbqt_with_openbabel(input_path, output_path):
     
     print(f"Running command: {' '.join(command)}")
     
-    _run_subprocess_command(command, abs_output_path)
+    _run_subprocess_command(tool_name="OpenBabel", command=command, abs_output_path=abs_output_path, verbose=True)
 
 
-def convert_ligand_to_pdbqt_with_openbabel(input_path, output_path, generate_3d=False):
+def convert_ligand_to_pdbqt_with_openbabel(input_path, output_path, generate_3d=False, verbose=True):
     """
     Converts a ligand file to PDBQT format using OpenBabel.
     
@@ -338,7 +338,7 @@ def convert_ligand_to_pdbqt_with_openbabel(input_path, output_path, generate_3d=
     
     print(f"Running command: {' '.join(command)}")
     
-    _run_subprocess_command(command, abs_output_path)
+    _run_subprocess_command(tool_name="OpenBabel", command=command, abs_output_path=abs_output_path, verbose=True)
 
 
 def convert_ligand_to_pdbqt_with_mgltools(input_path, output_path):
@@ -374,4 +374,4 @@ def convert_ligand_to_pdbqt_with_mgltools(input_path, output_path):
     
     print(f"Running command: {' '.join(command)}")
     
-    _run_subprocess_command(command, abs_output_path) 
+    _run_subprocess_command(tool_name="MGLTools", command=command, abs_output_path=abs_output_path, verbose=True) 
